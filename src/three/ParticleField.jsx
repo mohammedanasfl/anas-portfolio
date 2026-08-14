@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
@@ -139,7 +139,10 @@ function Field({ pointer }) {
 
 export default function ParticleField() {
   const pointer = useRef({ x: 3, y: 3 }); // off-screen until the user moves
+  const wrapRef = useRef(null);
+  const [visible, setVisible] = useState(true);
 
+  // Pointer tracking (only meaningful while the field is on-screen)
   useEffect(() => {
     const set = (cx, cy) => {
       pointer.current.x = (cx / window.innerWidth) * 2 - 1;
@@ -155,11 +158,24 @@ export default function ParticleField() {
     };
   }, []);
 
+  // Stop the render loop entirely once the hero scrolls out of view — frees the
+  // GPU so the rest of the page scrolls smoothly.
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), {
+      rootMargin: '120px 0px',
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <div className="pointer-events-none absolute inset-0">
+    <div ref={wrapRef} className="pointer-events-none absolute inset-0">
       <Canvas
+        frameloop={visible ? 'always' : 'never'}
         camera={{ position: [0, 0, 10.5], fov: 55 }}
-        dpr={[1, 2]}
+        dpr={[1, 1.75]}
         gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
       >
         <Field pointer={pointer} />

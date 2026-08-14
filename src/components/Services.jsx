@@ -5,26 +5,32 @@ import 'aos/dist/aos.css';
 
 const TagCard = ({ number, title, text, className, aosDelay, aosType, pathLength, containerRef }) => {
   const ref = useRef(null);
+  const metrics = useRef({ trigger: null, height: 1 });
   const [isActive, setIsActive] = useState(false);
+
+  // Invalidate cached geometry on resize so it re-measures once.
+  useEffect(() => {
+    const reset = () => { metrics.current.trigger = null; };
+    window.addEventListener('resize', reset);
+    return () => window.removeEventListener('resize', reset);
+  }, []);
 
   useMotionValueEvent(pathLength, "change", (latest) => {
     if (!ref.current || !containerRef.current) return;
 
-    const cardRect = ref.current.getBoundingClientRect();
-    const containerRect = containerRef.current.getBoundingClientRect();
-
-    const cardTopRelativeToContainer = cardRect.top - containerRect.top;
-    const containerHeight = containerRect.height;
-
-    // Trigger when the line tip is 50px into the card
-    const triggerY = cardTopRelativeToContainer + 50;
-    const lineTipY = latest * containerHeight;
-
-    if (lineTipY >= triggerY && !isActive) {
-      setIsActive(true);
-    } else if (lineTipY < triggerY && isActive) {
-      setIsActive(false);
+    // Measure once (and after resize) instead of every frame — avoids a forced
+    // reflow on each scroll tick. Card vertical offset is scroll-invariant and the
+    // AOS fades are horizontal, so a single measurement stays accurate.
+    if (metrics.current.trigger === null) {
+      const cardRect = ref.current.getBoundingClientRect();
+      const containerRect = containerRef.current.getBoundingClientRect();
+      metrics.current.trigger = (cardRect.top - containerRect.top) + 50;
+      metrics.current.height = containerRect.height || 1;
     }
+
+    const lineTipY = latest * metrics.current.height;
+    const next = lineTipY >= metrics.current.trigger;
+    setIsActive((prev) => (prev === next ? prev : next));
   });
 
   return (

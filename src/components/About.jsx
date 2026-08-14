@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useInView, useReducedMotion } from 'framer-motion';
-import portrait from '../assets/about/image.png';
+import portrait from '../assets/about/portrait.webp';
 import reactLogo from '../assets/about/react.png';
 import pythonLogo from '../assets/about/python.svg';
 import javaLogo from '../assets/about/java.svg';

@@ -91,10 +91,10 @@ const Navbar = () => {
         className="fixed inset-x-0 top-3 z-50 px-4 md:top-5"
       >
         <nav
-          className={`mx-auto flex max-w-5xl items-center justify-between gap-4 rounded-full border py-2 pl-5 pr-2 transition-all duration-500 ${
+          className={`mx-auto flex max-w-5xl items-center justify-between gap-4 rounded-full border py-2 pl-5 pr-2 transition-all duration-500 [will-change:background] ${
             isScrolled
-              ? 'border-white/10 bg-black/55 shadow-[0_12px_44px_rgba(0,0,0,0.55)] backdrop-blur-xl'
-              : 'border-white/10 bg-white/[0.04] backdrop-blur-xl'
+              ? 'border-white/10 bg-black/65 shadow-[0_12px_44px_rgba(0,0,0,0.55)] backdrop-blur-md'
+              : 'border-white/10 bg-white/[0.05] backdrop-blur-md'
           }`}
         >
           {/* Logo */}
