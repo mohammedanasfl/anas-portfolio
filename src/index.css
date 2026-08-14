@@ -1,11 +1,34 @@
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────────────────────
+   Design tokens — dark editorial / OLED, developer typography
+   ───────────────────────────────────────────────────────────── */
 @theme {
+  /* Typography */
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Brand */
+  --color-brand: #ff2a2a;
+  --color-brand-soft: #ff5a5a;
+
+  /* OLED surface scale */
+  --color-ink: #080808;
+  --color-ink-2: #0f0f10;
+  --color-ink-3: #17171a;
+
+  /* Motion */
   --animate-float: float 6s ease-in-out infinite;
+  --animate-marquee: marquee 28s linear infinite;
 
   @keyframes float {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-20px); }
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
   }
 }
 
@@ -16,8 +39,29 @@ html {
 body {
   margin: 0;
   padding: 0;
-  background-color: #000;
+  background-color: var(--color-ink);
   color: #fff;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Subtle developer dot-grid used behind dark sections */
+.bg-dotgrid {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* Respect reduced-motion globally for CSS-driven animations */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 [data-aos="drop-bounce"] {
