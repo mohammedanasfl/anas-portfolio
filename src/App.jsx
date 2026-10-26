@@ -1,4 +1,3 @@
-import React from 'react'
 import Preloader from './components/Preloader'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
@@ -14,12 +13,14 @@ function App() {
     <>
       <Preloader />
       <Navbar />
-      <Hero />
-      <About />
-      <Experience />
-      <Projects />
-      <Services />
-      <Contact />
+      <main>
+        <Hero />
+        <About />
+        <Experience />
+        <Projects />
+        <Services />
+        <Contact />
+      </main>
       <Footer />
     </>
   )

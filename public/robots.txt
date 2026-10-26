@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mohammedanasfl.github.io/anas-portfolio/sitemap.xml
